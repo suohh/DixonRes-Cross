@@ -1515,13 +1515,15 @@ static void dixon_complexity_write_report_body(
     fprintf(fp, "\n--- Step 1/2 ---\n");
     fprintf(fp, "Cancellation matrix size: %ld x %ld\n", num_polys, num_polys);
     fprintf(fp, "Step 1 indeterminates (2*elim + params): %ld = 2*%ld + %ld\n",
-            report->step1_var_count, report->num_elim_vars, report->num_parameter_vars);
-    fprintf(fp, "Step 1 determinant total degree upper bound: %ld\n",
-            report->step1_det_total_degree);
-    fprintf(fp, "Step 1 Kronecker univariate degree upper bound (log2): %.6f\n",
-            report->step1_kronecker_degree_log2);
-    fprintf(fp, "Step 1 sparse term upper bound (log2 T): %.6f\n",
-            report->step1_sparse_term_bound_log2);
+        report->step1_var_count, report->num_elim_vars, report->num_parameter_vars);
+    if (verbose_level >= 2) {
+        fprintf(fp, "Step 1 determinant total degree upper bound: %ld\n",
+                report->step1_det_total_degree);
+        fprintf(fp, "Step 1 Kronecker univariate degree upper bound (log2): %.6f\n",
+                report->step1_kronecker_degree_log2);
+        fprintf(fp, "Step 1 sparse term upper bound (log2 T): %.6f\n",
+                report->step1_sparse_term_bound_log2);
+    }
     if (verbose_level >= 2) {
         fprintf(fp, "Step 1 sparse structural model: T <= M^2 (B+1)^r with M=");
         fmpz_fprint(fp, matrix_size);
@@ -1824,13 +1826,15 @@ static void dixon_complexity_write_report_body(
         double theorem_expected = theorem_char_ok
             ? (report->step1_sparse_log2 + log2(theorem_retry))
             : INFINITY;
-        if (theorem_char_ok) {
-            fprintf(fp, "Step 1 theorem success lower bound p >= 0.75\n");
-            // fprintf(fp, "Step 1 theorem retry factor upper estimate 1/p <= 1.33333333333\n");
-            fprintf(fp, "Step 1 theorem retry-adjusted expected sparse complexity (log2): %.6f\n",
-                    theorem_expected);
-        } else {
-            fprintf(fp, "Step 1 theorem success lower bound unavailable (char(F_q) < D)\n");
+        if (verbose_level >= 2) {
+            if (theorem_char_ok) {
+                fprintf(fp, "Step 1 theorem success lower bound p >= 0.75\n");
+                // fprintf(fp, "Step 1 theorem retry factor upper estimate 1/p <= 1.33333333333\n");
+                fprintf(fp, "Step 1 theorem retry-adjusted expected sparse complexity (log2): %.6f\n",
+                        theorem_expected);
+            } else {
+                fprintf(fp, "Step 1 theorem success lower bound unavailable (char(F_q) < D)\n");
+            }
         }
 
         if (verbose_level >= 2) {
